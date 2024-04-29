@@ -74,6 +74,8 @@ class CompareApi {
 			);
 			eventEmitter.emit("compare", "Table records have been compared", 95);
 		}
+		await pgSourceClient.end();
+		await pgTargetClient.end();
 
 		let scriptFilePath = await this.saveSqlScript(scripts, config, scriptName, eventEmitter);
 
