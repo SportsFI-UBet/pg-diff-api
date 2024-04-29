@@ -468,7 +468,7 @@ class CompareApi {
 					indexDefinition.includes(`${rawColumnName})`, serachStartingIndex) ||
 					indexDefinition.includes(`${columnName}`, serachStartingIndex)
 				) {
-					sqlScript.push(sql.generateDropIndexScript(index));
+					sqlScript.push(sql.generateDropIndexScript(`"${targetTable.indexes[index].schema}"."${index}"`));
 					droppedIndexes.push(index);
 				}
 			}
@@ -579,7 +579,7 @@ class CompareApi {
 				//Table index exists on both database, then compare index definition
 				if (sourceTableIndexes[index].definition != targetTableIndexes[index].definition) {
 					if (!droppedIndexes.includes(index)) {
-						sqlScript.push(sql.generateDropIndexScript(index));
+						sqlScript.push(sql.generateDropIndexScript(`"${targetTableIndexes[index].schema}"."${index}"`));
 					}
 					sqlScript.push(`\n${sourceTableIndexes[index].definition};\n`);
 					sqlScript.push(
@@ -628,7 +628,7 @@ class CompareApi {
 			//Get dropped indexes
 			if (!sourceTableIndexes[index] && !droppedIndexes.includes(index))
 				//Table index not exists on source, then generate script to drop index
-				sqlScript.push(sql.generateDropIndexScript(index));
+				sqlScript.push(sql.generateDropIndexScript(`"${targetTableIndexes[index].schema}"."${index}"`));
 		}
 
 		return sqlScript;
